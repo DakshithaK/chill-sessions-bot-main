@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send, Bot, User, Loader2, Maximize2, Minimize2 } from "lucide-react";
+import { Send, Bot, User, Loader2, Maximize2, Minimize2, Phone } from "lucide-react";
 import { apiService, Message } from "@/services/api";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/contexts/UserContext";
@@ -18,17 +18,8 @@ const Chat = ({ className }: ChatProps) => {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [isInitializing, setIsInitializing] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { userName } = useUser();
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
 
   // Initialize chat session
   useEffect(() => {
@@ -89,7 +80,7 @@ const Chat = ({ className }: ChatProps) => {
       // Add error message
       const errorMessage: Message = {
         id: Date.now().toString(),
-        text: "I'm having trouble responding right now. Please try again in a moment. 💙",
+        text: "Having trouble responding right now. Try again in a moment.",
         sender: 'ai',
         timestamp: new Date().toISOString(),
       };
@@ -190,14 +181,24 @@ const Chat = ({ className }: ChatProps) => {
               <p className="text-brightGray/80 text-sm">Always here to listen</p>
             </div>
           </div>
-          <Button
-            onClick={toggleFullscreen}
-            variant="ghost"
-            size="icon"
-            className="text-brightGray hover:bg-brightGray/20"
-          >
-            {isFullscreen ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
-          </Button>
+          <div className="flex items-center gap-4">
+            <a 
+              href="tel:8277946600" 
+              className="flex items-center gap-2 text-brightGray/90 hover:text-brightGray text-sm px-3 py-1.5 rounded-md hover:bg-brightGray/10 transition-colors"
+              title="NIMHANS Crisis Support"
+            >
+              <Phone className="w-4 h-4" />
+              <span className="hidden sm:inline">8277946600</span>
+            </a>
+            <Button
+              onClick={toggleFullscreen}
+              variant="ghost"
+              size="icon"
+              className="text-brightGray hover:bg-brightGray/20"
+            >
+              {isFullscreen ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -248,8 +249,6 @@ const Chat = ({ className }: ChatProps) => {
             </div>
           </div>
         )}
-        
-        <div ref={messagesEndRef} />
         </div>
       </div>
 

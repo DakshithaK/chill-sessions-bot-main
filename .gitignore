@@ -12,6 +12,19 @@ dist
 dist-ssr
 *.local
 
+# Environment variables - IMPORTANT: Never commit these!
+.env
+.env.local
+.env.production
+.env.development
+backend/.env
+backend/.env.local
+backend/.env.production
+
+# Database files (may contain sensitive data)
+backend/data/*.db
+backend/data/*.db-journal
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -22,3 +35,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Build outputs
+build
+*.tsbuildinfo
+
+# Lock files (optional - some prefer to commit these)
+# package-lock.json
+# bun.lockb
