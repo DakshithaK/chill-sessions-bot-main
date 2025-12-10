@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { MessageCircle, Sparkles } from "lucide-react";
+import { MessageCircle, Sparkles, Phone } from "lucide-react";
 
 const CTA = () => {
   return (
@@ -38,7 +38,7 @@ const CTA = () => {
                 </Button>
               </div>
               
-              <div className="flex items-center justify-center gap-6 text-brightGray/70 text-sm">
+              <div className="flex items-center justify-center gap-6 text-brightGray/70 text-sm mb-6">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-carolinaBlue/70 rounded-full"></div>
                   <span>No credit card required</span>
@@ -51,6 +51,18 @@ const CTA = () => {
                   <div className="w-2 h-2 bg-carolinaBlue/70 rounded-full"></div>
                   <span>Available 24/7</span>
                 </div>
+              </div>
+              
+              <div className="pt-6 border-t border-carolinaBlue/20">
+                <p className="text-brightGray/80 text-sm mb-3">In crisis? Need immediate support?</p>
+                <a 
+                  href="tel:8277946600" 
+                  className="inline-flex items-center gap-2 text-carolinaBlue hover:text-brightGray text-lg font-semibold transition-colors"
+                >
+                  <Phone className="w-5 h-5" />
+                  NIMHANS Crisis Support: 8277946600
+                </a>
+                <p className="text-brightGray/60 text-xs mt-2">Connect with trained mental health professionals</p>
               </div>
             </CardContent>
           </Card>

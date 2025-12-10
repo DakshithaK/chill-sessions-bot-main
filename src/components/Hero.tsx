@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { MessageCircle, Flower, Users, ArrowRight, Heart, Shield, Clock } from "lucide-react";
+import { MessageCircle, Flower, Users, ArrowRight, Heart, Shield, Clock, Phone } from "lucide-react";
 import { useState } from "react";
 
 interface HeroProps {
@@ -115,10 +115,26 @@ const Hero = ({ onStartChatting }: HeroProps) => {
                       <Heart className="w-6 h-6 text-carolinaBlue" />
                       <h3 className="font-semibold text-chineseBlack">Remember</h3>
                     </div>
-                    <p className="text-chineseBlack/80">
+                    <p className="text-chineseBlack/80 mb-4">
                       This is a supportive AI companion, not a replacement for professional therapy. 
                       If you're in crisis, please reach out to a mental health professional or crisis hotline.
                     </p>
+                    <div className="bg-carolinaBlue/10 p-4 rounded-lg border border-carolinaBlue/30">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Phone className="w-5 h-5 text-carolinaBlue" />
+                        <h4 className="font-semibold text-chineseBlack">Crisis Support - NIMHANS</h4>
+                      </div>
+                      <a 
+                        href="tel:8277946600" 
+                        className="text-carolinaBlue hover:text-carolinaBlue/80 font-semibold text-lg flex items-center gap-2"
+                      >
+                        <Phone className="w-4 h-4" />
+                        8277946600
+                      </a>
+                      <p className="text-chineseBlack/70 text-sm mt-2">
+                        Connect with trained mental health professionals at NIMHANS (National Institute of Mental Health and Neurosciences)
+                      </p>
+                    </div>
                   </div>
                   
                   <div className="flex justify-center pt-4">
@@ -142,7 +158,7 @@ const Hero = ({ onStartChatting }: HeroProps) => {
               <div className="text-brightGray/70">Always Available</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-brightGray mb-2">10k+</div>
+              <div className="text-3xl font-bold text-brightGray mb-2">1k+</div>
               <div className="text-brightGray/70">Lives Improved</div>
             </div>
             <div className="text-center">
