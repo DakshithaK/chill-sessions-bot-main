@@ -80,7 +80,24 @@ The application will be available at `http://localhost:8080`
 
 ## Deployment
 
-Build the project for production:
+**Important:** GitHub stores your code but doesn't host/run your app. To make it accessible to users, you need to deploy it to a hosting platform.
+
+### Quick Deploy Options:
+
+1. **Vercel** (Recommended - Easiest)
+   ```bash
+   npm install -g vercel
+   vercel login
+   vercel  # Deploy frontend
+   cd backend && vercel  # Deploy backend
+   ```
+
+2. **Render** - Connect GitHub repo, auto-deploys
+3. **Railway** - One-click deployment from GitHub
+
+📖 **See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for detailed instructions**
+
+### Build for Production:
 
 ```sh
 npm run build
