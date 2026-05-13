@@ -27,12 +27,9 @@ export interface SessionResponse {
 }
 
 class ApiService {
-  private async request<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
+  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
-    
+
     const config: RequestInit = {
       headers: {
         'Content-Type': 'application/json',
@@ -43,10 +40,12 @@ class ApiService {
 
     try {
       const response = await fetch(url, config);
-      
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error?.message || `HTTP ${response.status}: ${response.statusText}`);
+        throw new Error(
+          errorData.error?.message || `HTTP ${response.status}: ${response.statusText}`
+        );
       }
 
       return await response.json();
@@ -71,15 +70,15 @@ class ApiService {
 
   // Get messages for a session
   async getMessages(
-    sessionId: string, 
-    page: number = 1, 
+    sessionId: string,
+    page: number = 1,
     limit: number = 20
   ): Promise<{ messages: Message[]; pagination: any; message: string }> {
     const params = new URLSearchParams({
       page: page.toString(),
       limit: limit.toString(),
     });
-    
+
     return this.request<{ messages: Message[]; pagination: any; message: string }>(
       `/chat/sessions/${sessionId}/messages?${params}`
     );
@@ -98,10 +97,8 @@ class ApiService {
     const params = new URLSearchParams({
       limit: limit.toString(),
     });
-    
-    return this.request<{ sessions: Session[]; message: string }>(
-      `/chat/sessions?${params}`
-    );
+
+    return this.request<{ sessions: Session[]; message: string }>(`/chat/sessions?${params}`);
   }
 
   // Health check

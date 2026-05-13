@@ -22,26 +22,26 @@ export class WebSearchService {
     // - Google Custom Search API
     // - DuckDuckGo API
     // - PubMed API for research papers
-    
+
     try {
       // Example: Using DuckDuckGo Instant Answer API (free, no API key needed)
       const searchUrl = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1&skip_disambig=1`;
-      
+
       const response = await fetch(searchUrl);
       const data = await response.json();
-      
+
       const results: SearchResult[] = [];
-      
+
       // Extract relevant information
       if (data.AbstractText) {
         results.push({
           title: data.Heading || query,
           url: data.AbstractURL || '',
           snippet: data.AbstractText,
-          source: 'DuckDuckGo'
+          source: 'DuckDuckGo',
         });
       }
-      
+
       if (data.RelatedTopics && data.RelatedTopics.length > 0) {
         data.RelatedTopics.slice(0, 3).forEach((topic: any) => {
           if (topic.Text) {
@@ -49,12 +49,12 @@ export class WebSearchService {
               title: topic.Text.split(' - ')[0] || query,
               url: topic.FirstURL || '',
               snippet: topic.Text,
-              source: 'DuckDuckGo'
+              source: 'DuckDuckGo',
             });
           }
         });
       }
-      
+
       return results;
     } catch (error) {
       console.error('Web search error:', error);
@@ -76,36 +76,36 @@ export class WebSearchService {
    */
   static getEstablishedReferences(topic: string): string[] {
     const references: Record<string, string[]> = {
-      'cbt': [
+      cbt: [
         'Cognitive Behavioral Therapy (CBT) - Beck, J.S. (2011). Cognitive Behavior Therapy: Basics and Beyond',
         'CBT effectiveness - Multiple meta-analyses show CBT is effective for depression, anxiety, and other conditions',
-        'CBT principles - Based on the cognitive model: thoughts, feelings, and behaviors are interconnected'
+        'CBT principles - Based on the cognitive model: thoughts, feelings, and behaviors are interconnected',
       ],
-      'dbt': [
+      dbt: [
         'Dialectical Behavior Therapy (DBT) - Linehan, M.M. (1993). Skills Training Manual for Treating Borderline Personality Disorder',
         'DBT effectiveness - Research shows DBT is effective for BPD, self-harm, and emotional dysregulation',
-        'DBT skills - Mindfulness, distress tolerance, emotion regulation, and interpersonal effectiveness'
+        'DBT skills - Mindfulness, distress tolerance, emotion regulation, and interpersonal effectiveness',
       ],
-      'act': [
+      act: [
         'Acceptance and Commitment Therapy (ACT) - Hayes, S.C. (2004). Acceptance and Commitment Therapy',
         'ACT effectiveness - Research supports ACT for anxiety, depression, chronic pain, and other conditions',
-        'ACT principles - Psychological flexibility through acceptance, mindfulness, and values-based action'
+        'ACT principles - Psychological flexibility through acceptance, mindfulness, and values-based action',
       ],
-      'mindfulness': [
+      mindfulness: [
         'Mindfulness-based interventions - Kabat-Zinn, J. (1990). Full Catastrophe Living',
         'Mindfulness research - Studies show benefits for stress reduction, anxiety, depression, and emotional regulation',
-        'MBSR/MBCT - Evidence-based mindfulness programs with strong research support'
+        'MBSR/MBCT - Evidence-based mindfulness programs with strong research support',
       ],
-      'anxiety': [
+      anxiety: [
         'Anxiety treatment - CBT and exposure therapy have strong empirical support',
         'Anxiety research - Multiple studies show effectiveness of cognitive restructuring and behavioral interventions',
-        'Anxiety mechanisms - Research on the role of avoidance, safety behaviors, and cognitive biases'
+        'Anxiety mechanisms - Research on the role of avoidance, safety behaviors, and cognitive biases',
       ],
-      'depression': [
+      depression: [
         'Depression treatment - CBT, IPT, and behavioral activation have strong research support',
         'Depression research - Studies show combination of therapy and medication can be most effective',
-        'Depression mechanisms - Research on cognitive distortions, negative schemas, and behavioral patterns'
-      ]
+        'Depression mechanisms - Research on cognitive distortions, negative schemas, and behavioral patterns',
+      ],
     };
 
     const lowerTopic = topic.toLowerCase();
@@ -118,4 +118,3 @@ export class WebSearchService {
     return [];
   }
 }
-

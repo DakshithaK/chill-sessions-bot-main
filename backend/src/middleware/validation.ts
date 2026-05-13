@@ -14,7 +14,7 @@ export const validateRequest = (schema: {
     if (schema.body) {
       const { error } = schema.body.validate(req.body);
       if (error) {
-        errors.push(`Body: ${error.details.map(d => d.message).join(', ')}`);
+        errors.push(`Body: ${error.details.map((d) => d.message).join(', ')}`);
       }
     }
 
@@ -22,7 +22,7 @@ export const validateRequest = (schema: {
     if (schema.query) {
       const { error } = schema.query.validate(req.query);
       if (error) {
-        errors.push(`Query: ${error.details.map(d => d.message).join(', ')}`);
+        errors.push(`Query: ${error.details.map((d) => d.message).join(', ')}`);
       }
     }
 
@@ -30,7 +30,7 @@ export const validateRequest = (schema: {
     if (schema.params) {
       const { error } = schema.params.validate(req.params);
       if (error) {
-        errors.push(`Params: ${error.details.map(d => d.message).join(', ')}`);
+        errors.push(`Params: ${error.details.map((d) => d.message).join(', ')}`);
       }
     }
 
@@ -49,15 +49,15 @@ export const schemas = {
     sessionId: Joi.string().uuid().optional(),
     userName: Joi.string().min(1).max(100).optional(),
   }),
-  
+
   session: Joi.object({
     sessionId: Joi.string().uuid().required(),
   }),
-  
+
   sessionCreate: Joi.object({
     userName: Joi.string().min(1).max(100).optional(),
   }),
-  
+
   pagination: Joi.object({
     page: Joi.number().integer().min(1).default(1),
     limit: Joi.number().integer().min(1).max(100).default(20),

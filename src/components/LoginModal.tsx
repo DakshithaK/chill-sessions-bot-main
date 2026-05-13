@@ -1,9 +1,15 @@
-import { useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { User, Heart } from "lucide-react";
+import { useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { User, Heart } from 'lucide-react';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -11,7 +17,7 @@ interface LoginModalProps {
 }
 
 const LoginModal = ({ isOpen, onLogin }: LoginModalProps) => {
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,7 +33,7 @@ const LoginModal = ({ isOpen, onLogin }: LoginModalProps) => {
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && name.trim()) {
+    if (e.key === 'Enter' && name.trim()) {
       handleSubmit(e as any);
     }
   };
@@ -43,11 +49,11 @@ const LoginModal = ({ isOpen, onLogin }: LoginModalProps) => {
             Welcome to Your Safe Space
           </DialogTitle>
           <DialogDescription className="text-chineseBlack/70 text-base">
-            To provide you with a more personalized experience, please tell us your name. 
-            This helps our AI therapist address you properly during your sessions.
+            To provide you with a more personalized experience, please tell us your name. This helps
+            our AI therapist address you properly during your sessions.
           </DialogDescription>
         </DialogHeader>
-        
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="name" className="text-chineseBlack font-medium">
@@ -68,7 +74,7 @@ const LoginModal = ({ isOpen, onLogin }: LoginModalProps) => {
               />
             </div>
           </div>
-          
+
           <Button
             type="submit"
             className="w-full bg-carolinaBlue hover:bg-carolinaBlue/90 text-brightGray font-medium py-3"
@@ -80,13 +86,15 @@ const LoginModal = ({ isOpen, onLogin }: LoginModalProps) => {
                 Starting your session...
               </div>
             ) : (
-              "Start My Session"
+              'Start My Session'
             )}
           </Button>
         </form>
-        
+
         <div className="text-center text-sm text-chineseBlack/60">
-          <p>Your name is stored locally and will be used to personalize your AI therapy experience.</p>
+          <p>
+            Your name is stored locally and will be used to personalize your AI therapy experience.
+          </p>
         </div>
       </DialogContent>
     </Dialog>
@@ -94,5 +102,3 @@ const LoginModal = ({ isOpen, onLogin }: LoginModalProps) => {
 };
 
 export default LoginModal;
-
-

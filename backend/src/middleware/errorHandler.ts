@@ -1,29 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
+import { config } from '../config/env.js';
+import { logger } from '../lib/logger.js';
 
 export interface AppError extends Error {
   statusCode?: number;
   isOperational?: boolean;
 }
 
-export const errorHandler = (
-  error: AppError,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const errorHandler = (error: AppError, req: Request, res: Response, _next: NextFunction) => {
   let { statusCode = 500, message } = error;
 
-  // Log error for debugging
-  console.error('Error:', {
-    message: error.message,
-    stack: error.stack,
-    url: req.url,
-    method: req.method,
-    ip: req.ip,
-    userAgent: req.get('User-Agent'),
-  });
-
-  // Handle specific error types
   if (error.name === 'ValidationError') {
     statusCode = 400;
     message = 'Validation error';
@@ -35,18 +21,29 @@ export const errorHandler = (
     message = 'Invalid JSON format';
   }
 
-  // Don't leak error details in production
-  if (process.env.NODE_ENV === 'production' && statusCode === 500) {
+  const requestId = (req as Request & { id?: string }).id;
+
+  logger.error(
+    {
+      err: error,
+      url: req.url,
+      method: req.method,
+      statusCode,
+      requestId,
+    },
+    'Request error'
+  );
+
+  // Never leak internal 5xx messages to clients
+  if (statusCode === 500) {
     message = 'Internal server error';
   }
 
-  res.status(statusCode).json({
-    error: {
-      message,
-      statusCode,
-      ...(process.env.NODE_ENV === 'development' && { stack: error.stack }),
-    },
-  });
+  const body: Record<string, unknown> = { error: { message, requestId } };
+  if (config.NODE_ENV === 'development' && error.stack) {
+    (body.error as Record<string, unknown>).stack = error.stack;
+  }
+  res.status(statusCode).json(body);
 };
 
 export const createError = (message: string, statusCode: number = 500): AppError => {

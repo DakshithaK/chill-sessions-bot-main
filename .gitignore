@@ -40,6 +40,11 @@ backend/data/*.db-journal
 build
 *.tsbuildinfo
 
+# Test artifacts
+coverage
+**/coverage
+.vitest-cache
+
 # Lock files (optional - some prefer to commit these)
 # package-lock.json
 # bun.lockb

@@ -2,103 +2,105 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
-import morgan from 'morgan';
 import compression from 'compression';
-import dotenv from 'dotenv';
+import { config } from './config/env.js';
+import { logger, httpLogger } from './lib/logger.js';
 import { errorHandler } from './middleware/errorHandler.js';
-import { validateRequest } from './middleware/validation.js';
 import chatRoutes from './routes/chat.js';
 import healthRoutes from './routes/health.js';
 import { initializeDatabase } from './database/init.js';
 
-// Load environment variables
-dotenv.config();
+export const app = express();
 
-const app = express();
-const PORT = process.env.PORT || 3001;
-
-// Security middleware
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'"],
+        imgSrc: ["'self'", 'data:', 'https:'],
+      },
     },
-  },
-}));
+  })
+);
 
-// CORS configuration
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:8080',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+app.use(
+  cors({
+    origin: config.FRONTEND_URL,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-request-id'],
+  })
+);
 
-// Rate limiting
 const limiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 minutes
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'), // limit each IP to 100 requests per windowMs
-  message: {
-    error: 'Too many requests from this IP, please try again later.',
-  },
+  windowMs: config.RATE_LIMIT_WINDOW_MS,
+  max: config.RATE_LIMIT_MAX_REQUESTS,
+  message: { error: 'Too many requests from this IP, please try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
 });
-
 app.use(limiter);
 
-// Compression and logging
 app.use(compression());
-app.use(morgan('combined'));
+app.use(httpLogger);
 
-// Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
-// Routes
 app.use('/api/health', healthRoutes);
 app.use('/api/chat', chatRoutes);
 
-// Error handling middleware
-app.use(errorHandler);
-
-// 404 handler
-app.use('*', (req, res) => {
+app.use((req, res) => {
   res.status(404).json({
-    error: 'Route not found',
-    message: `Cannot ${req.method} ${req.originalUrl}`,
+    error: { message: `Cannot ${req.method} ${req.originalUrl}` },
   });
 });
 
-// Initialize database and start server
+app.use(errorHandler);
+
 async function startServer() {
   try {
     await initializeDatabase();
-    console.log('✅ Database initialized successfully');
-    
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-      console.log(`📱 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:8080'}`);
-      console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+    logger.info('Database initialized');
+
+    app.listen(config.PORT, () => {
+      logger.info(
+        { port: config.PORT, frontendUrl: config.FRONTEND_URL, env: config.NODE_ENV },
+        'Server running'
+      );
     });
   } catch (error) {
-    console.error('❌ Failed to start server:', error);
+    logger.fatal({ err: error }, 'Failed to start server');
     process.exit(1);
   }
 }
 
-// Graceful shutdown
 process.on('SIGTERM', () => {
-  console.log('🛑 SIGTERM received, shutting down gracefully');
+  logger.info('SIGTERM received, shutting down gracefully');
   process.exit(0);
 });
 
 process.on('SIGINT', () => {
-  console.log('🛑 SIGINT received, shutting down gracefully');
+  logger.info('SIGINT received, shutting down gracefully');
   process.exit(0);
 });
 
-startServer();
+let dbInitialized = false;
+async function ensureDatabaseInitialized() {
+  if (!dbInitialized) {
+    await initializeDatabase();
+    dbInitialized = true;
+  }
+}
+
+if (process.env.VERCEL) {
+  ensureDatabaseInitialized().catch((err) => logger.error({ err }, 'DB init failed (vercel)'));
+}
+
+if (!process.env.VERCEL && config.NODE_ENV !== 'test') {
+  startServer();
+}
+
+export default app;

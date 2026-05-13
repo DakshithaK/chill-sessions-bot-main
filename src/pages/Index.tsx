@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from "react";
-import Hero from "@/components/Hero";
-import Chat from "@/components/Chat";
-import Features from "@/components/Features";
-import CTA from "@/components/CTA";
-import LoginModal from "@/components/LoginModal";
-import { useUser } from "@/contexts/UserContext";
+import { useState, useEffect, useRef } from 'react';
+import Hero from '@/components/Hero';
+import Chat from '@/components/Chat';
+import Features from '@/components/Features';
+import CTA from '@/components/CTA';
+import LoginModal from '@/components/LoginModal';
+import { useUser } from '@/contexts/UserContext';
 
 const Index = () => {
   const { isLoggedIn, login } = useUser();
@@ -24,18 +24,15 @@ const Index = () => {
   };
 
   const scrollToChat = () => {
-    chatSectionRef.current?.scrollIntoView({ 
+    chatSectionRef.current?.scrollIntoView({
       behavior: 'smooth',
-      block: 'start'
+      block: 'start',
     });
   };
 
   return (
     <div className="min-h-screen bg-background">
-      <LoginModal 
-        isOpen={showLoginModal} 
-        onLogin={handleLogin}
-      />
+      <LoginModal isOpen={showLoginModal} onLogin={handleLogin} />
       <Hero onStartChatting={scrollToChat} />
       <div ref={chatSectionRef} className="py-20 bg-background">
         <div className="container mx-auto px-6">
@@ -45,8 +42,8 @@ const Index = () => {
                 Start Your Session
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Experience how our AI therapist provides empathetic, personalized support 
-                that feels like talking to someone who truly understands you.
+                Experience how our AI therapist provides empathetic, personalized support that feels
+                like talking to someone who truly understands you.
               </p>
             </div>
             {isLoggedIn && <Chat />}

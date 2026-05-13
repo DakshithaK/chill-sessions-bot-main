@@ -1,0 +1,12 @@
+node_modules
+dist
+build
+coverage
+**/dist
+**/build
+**/coverage
+bun.lockb
+package-lock.json
+backend/data
+backend/dist
+*.md
