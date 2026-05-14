@@ -73,11 +73,16 @@ jobs:
   audit:
     name: npm audit (production deps)
     runs-on: ubuntu-latest
+    # Informational only — never blocks CI.
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm audit --omit=dev --audit-level=high
-      - run: cd backend && npm audit --omit=dev --audit-level=high
+      - name: Frontend audit
+        continue-on-error: true
+        run: npm audit --omit=dev --audit-level=high
+      - name: Backend audit
+        continue-on-error: true
+        run: cd backend && npm audit --omit=dev --audit-level=high
